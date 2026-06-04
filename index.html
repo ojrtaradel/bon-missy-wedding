@@ -1,0 +1,1411 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jelbert & Missy | Fine-Art Wedding Invitation</title>
+
+    <!-- 
+      ========================================================
+      VERSION 5.0 CHANGES:
+      1. FLAP FIXED: The flap now perfectly opens upward as a realistic triangle without geometric bugs.
+      2. PHYSICAL EXTRACTION (NO FADE): Papers are solid objects sliding out of a physical pocket mask. No opacity fading.
+      3. NO CROPPING: Papers dynamically scale (height: max-content) to fit ALL names perfectly.
+      4. CENTERED MARGINS: Papers float in the center of the screen, preserving top/bottom blank space without internal scrolling.
+      5. FLOATING SHADOWS: Added deep drop-shadows and smooth GSAP bouncing for a realistic floating effect.
+      ========================================================
+    -->
+
+    <!-- Fine-Art Luxury Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Great+Vibes&family=Montserrat:wght@200;300;400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- GSAP Libraries for Scroll Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+      :root {
+        --dusty-blue: #7b95a8;
+        --dusty-blue-dark: #3a5369;
+        --dusty-blue-light: #d8e3ed;
+        --envelope-bg: #829ab0;
+        --off-white: #f5f3ef;
+        --gold: #cba864;
+        --gold-light: #e8d098;
+        --text-dark: #2c3e50;
+      }
+
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        background-color: var(--off-white);
+        font-family: "Cormorant Garamond", serif;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        /* Authentic Fine-Art Paper Texture */
+        background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+      }
+
+      .scroll-spacer {
+        height: 900vh;
+        width: 100vw;
+      }
+
+      .scene-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        perspective: 2000px;
+        overflow: hidden;
+      }
+
+      /* ----------------------------------
+         WATERCOLOR FLORAL ARRANGEMENTS 
+         ----------------------------------- */
+      .floral-bouquet {
+        position: absolute;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0.9;
+        filter: drop-shadow(0px 10px 15px rgba(0, 0, 0, 0.08));
+      }
+      .bouquet-left {
+        width: 350px;
+        height: 500px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-105%, -55%);
+      }
+      .bouquet-right {
+        width: 200px;
+        height: 300px;
+        top: 50%;
+        left: 50%;
+        transform: translate(55%, -10%);
+      }
+
+      .invited-text {
+        position: absolute;
+        top: 68%;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: "Great Vibes", cursive;
+        font-size: 3rem;
+        color: var(--dusty-blue-dark);
+        z-index: 2;
+        opacity: 0.9;
+        text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+      }
+
+      /* ----------------------------------
+         PHYSICAL ENVELOPE LAYERS
+         All share the exact same bounds to make a perfect physical sandwich
+         ----------------------------------- */
+      .env-layer {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 92vw;
+        max-width: 580px;
+        height: 380px;
+        transform: translate(-50%, -50%);
+        margin-top: -10px; /* Shift everything slightly up visually */
+      }
+
+      .patterned-liner {
+        background-color: var(--envelope-bg);
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0c1.5 5 5 8.5 10 10-5 1.5-8.5 5-10 10-1.5-5-5-8.5-10-10 5-1.5 8.5-5 10-10zm15 15c1 3.5 3.5 6 7 7-3.5 1-6 3.5-7 7-1-3.5-3.5-6-7-7 3.5-1 6-3.5 7-7zm-30 0c1 3.5 3.5 6 7 7-3.5 1-6 3.5-7 7-1-3.5-3.5-6-7-7 3.5-1 6-3.5 7-7zm15 30c1.5 5 5 8.5 10 10-5 1.5-8.5 5-10 10-1.5-5-5-8.5-10-10 5-1.5 8.5-5 10-10z' fill='%23ffffff' fill-opacity='0.25' fill-rule='evenodd'/%3E%3C/svg%3E");
+      }
+
+      .env-back {
+        border-radius: 4px;
+        box-shadow: 0 25px 50px rgba(58, 83, 105, 0.2);
+        z-index: 1; /* Back of envelope */
+      }
+
+      .env-front {
+        background: var(--envelope-bg);
+        clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
+        border-radius: 4px;
+        z-index: 3; /* Front of envelope */
+        box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.05);
+      }
+
+      .env-string {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 4;
+      }
+      .env-string::before,
+      .env-string::after {
+        content: "";
+        position: absolute;
+        width: 60%;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.4);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+      .env-string::before {
+        top: 25%;
+        left: -5%;
+        transform: rotate(25deg);
+      }
+      .env-string::after {
+        top: 25%;
+        right: -5%;
+        transform: rotate(-25deg);
+      }
+
+      .scroll-to-open {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.6rem;
+        letter-spacing: 4px;
+        color: #fff;
+        opacity: 0.9;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+
+      .env-flap {
+        height: 65%;
+        transform-origin: top center;
+        z-index: 4;
+        transform-style: preserve-3d;
+      }
+
+      .flap-front,
+      .flap-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+        backface-visibility: hidden;
+      }
+      .flap-front {
+        background: #738c9e;
+        filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.15));
+      }
+      .flap-back {
+        transform: rotateY(
+          180deg
+        ); /* Guaranteed mathematical fix for inverted triangle */
+      }
+
+      .seal {
+        position: absolute;
+        top: 62%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 75px;
+        height: 75px;
+        margin-top: -10px;
+        background: radial-gradient(
+          circle at 35% 35%,
+          #f2dfb1 0%,
+          var(--gold) 40%,
+          #9e7f32 100%
+        );
+        border-radius: 51% 49% 52% 48%;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow:
+          0 6px 12px rgba(0, 0, 0, 0.25),
+          inset 0 3px 6px rgba(255, 255, 255, 0.6);
+      }
+      .seal::before {
+        content: "";
+        position: absolute;
+        width: 62px;
+        height: 62px;
+        border-radius: 50%;
+        border: 1.5px solid rgba(255, 255, 255, 0.4);
+      }
+      .seal span {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.8rem;
+        font-style: italic;
+        color: #fff;
+        text-shadow:
+          -1px -1px 1px rgba(0, 0, 0, 0.15),
+          1px 1px 3px rgba(0, 0, 0, 0.3);
+      }
+
+      /* ----------------------------------
+         THE MAGICAL PAPER POCKET (NO FADING)
+         ----------------------------------- */
+      .paper-stack {
+        z-index: 2; /* Sandwiched EXACTLY between env-back and env-front */
+        /* This clip-path acts like a physical pocket. 
+           It lets the paper slide UP into the screen (-2000px top), 
+           but perfectly cuts it off at the bottom edge of the envelope (0px bottom)! */
+        clip-path: inset(-2000px -100px 0px -100px);
+      }
+
+      .paper {
+        position: absolute;
+        bottom: 0;
+        left: 2.5%;
+        width: 95%; /* Fits perfectly inside the envelope */
+        height: max-content; /* Dynamic height prevents cropping */
+        min-height: 80vh; /* Minimum height for structure */
+
+        background: #ffffff;
+        border-radius: 2px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); /* Floating shadow */
+        box-sizing: border-box;
+        text-align: center;
+        color: var(--text-dark);
+        background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.03"/%3E%3C/svg%3E');
+      }
+
+      /* Inner border that flawlessly scales with the dynamic height */
+      .paper::after {
+        content: "";
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        right: 15px;
+        bottom: 15px;
+        border: 1px solid rgba(141, 161, 181, 0.3);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .paper-content-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 30px;
+        box-sizing: border-box;
+        gap: 15px; /* Gap prevents text overlapping */
+      }
+
+      #paper1 {
+        background: linear-gradient(
+          to bottom,
+          #ffffff 60%,
+          var(--dusty-blue-light) 100%
+        );
+        z-index: 10;
+      }
+      #paper2 {
+        z-index: 11;
+        visibility: hidden;
+      }
+      #paper3 {
+        z-index: 12;
+        visibility: hidden;
+      }
+
+      /* Floral Accents */
+      .floral-accent-top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100px;
+        background: radial-gradient(
+          ellipse at top,
+          var(--dusty-blue-light) 0%,
+          transparent 70%
+        );
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      .floral-accent-bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 100px;
+        background: radial-gradient(
+          ellipse at bottom,
+          var(--dusty-blue-light) 0%,
+          transparent 70%
+        );
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      /* TYPOGRAPHY FOR PAPERS */
+      .monogram-rings {
+        position: relative;
+        width: 150px;
+        height: 110px;
+        margin-bottom: 5px;
+        z-index: 2;
+      }
+      .monogram-rings svg {
+        width: 100%;
+        height: 100%;
+        filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.05));
+      }
+
+      .paper-subtitle {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.1rem;
+        font-style: italic;
+        color: var(--dusty-blue-dark);
+        z-index: 2;
+      }
+      .name-text {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 2.3rem;
+        font-weight: 500;
+        color: var(--gold);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin: 0;
+        z-index: 2;
+      }
+      .script-and {
+        font-family: "Great Vibes", cursive;
+        font-size: 2.2rem;
+        color: var(--gold);
+        line-height: 0.5;
+        z-index: 2;
+      }
+      .info-text {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.2rem;
+        font-style: italic;
+        color: var(--dusty-blue-dark);
+        line-height: 1.4;
+        z-index: 2;
+      }
+      .date-text {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 500;
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        color: var(--dusty-blue-dark);
+        z-index: 2;
+      }
+      .location-text {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.9rem;
+        font-weight: 500;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--dusty-blue-dark);
+        z-index: 2;
+        margin-top: 10px;
+      }
+
+      .divider {
+        width: 50px;
+        height: 1px;
+        background: var(--gold);
+        margin: 5px 0;
+        opacity: 0.5;
+        z-index: 2;
+      }
+
+      /* Grids for Entourage (Scaling perfectly) */
+      .page-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 2.2rem;
+        color: var(--dusty-blue-dark);
+        margin: 0;
+        font-weight: 500;
+        letter-spacing: 1px;
+        z-index: 2;
+      }
+      .page-sub {
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        color: var(--gold);
+        margin: 0;
+        z-index: 2;
+      }
+
+      .parents-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px 10px;
+        width: 100%;
+        font-size: 1rem;
+        font-family: "Cormorant Garamond", serif;
+        z-index: 2;
+      }
+      .parents-container h4 {
+        margin: 0 0 5px 0;
+        color: var(--gold);
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .principal-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px 10px;
+        width: 100%;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        text-align: center;
+        z-index: 2;
+      }
+      .principal-grid h4 {
+        color: var(--gold);
+        margin: 0 0 5px 0;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        border-bottom: 1px solid rgba(194, 163, 98, 0.3);
+        padding-bottom: 5px;
+      }
+
+      .secondary-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px 10px;
+        width: 100%;
+        font-size: 0.9rem;
+        text-align: center;
+        font-family: "Cormorant Garamond", serif;
+        z-index: 2;
+      }
+      .sec-role {
+        color: var(--gold);
+        font-family: "Montserrat", sans-serif;
+        font-weight: 500;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 4px;
+      }
+      .sec-names {
+        color: var(--dusty-blue-dark);
+        line-height: 1.4;
+        font-weight: 500;
+      }
+
+      /* MAP SECTION */
+      .map-section {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: var(--off-white);
+        z-index: 20;
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .map-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 2.8rem;
+        font-style: italic;
+        color: var(--dusty-blue-dark);
+        margin-bottom: 20px;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      .map-container {
+        width: 90vw;
+        max-width: 650px;
+        height: 420px;
+        background: #fdfbf7;
+        border-radius: 8px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        position: relative;
+        overflow: hidden;
+        border: 2px solid var(--dusty-blue);
+        opacity: 0;
+      }
+
+      .map-svg {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .map-path {
+        fill: none;
+        stroke: var(--dusty-blue-dark);
+        stroke-width: 4;
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        filter: drop-shadow(0px 3px 3px rgba(0, 0, 0, 0.2));
+      }
+      .map-pin {
+        fill: var(--gold);
+        opacity: 0;
+        transform-origin: bottom center;
+        filter: drop-shadow(0px 8px 8px rgba(0, 0, 0, 0.25));
+      }
+      .map-text-group {
+        opacity: 0;
+      }
+      .map-label-title {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 16px;
+        font-weight: 600;
+        fill: var(--text-dark);
+      }
+      .map-label-sub {
+        font-family: "Montserrat", sans-serif;
+        font-size: 9px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        fill: var(--gold);
+      }
+
+      .map-link-btn {
+        position: absolute;
+        bottom: 25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--dusty-blue-dark);
+        color: #ffffff;
+        text-decoration: none;
+        font-family: "Montserrat", sans-serif;
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 14px 28px;
+        border-radius: 30px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        pointer-events: none;
+        z-index: 10;
+        transition:
+          background-color 0.3s ease,
+          transform 0.2s ease;
+      }
+      .map-link-btn:hover {
+        background-color: var(--gold);
+        transform: translateX(-50%) scale(1.05);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scroll-spacer"></div>
+
+    <div class="scene-container">
+      <!-- BACKGROUND FINE-ART WATERCOLOR FLORALS -->
+      <svg
+        class="floral-bouquet bouquet-left"
+        viewBox="0 0 300 400"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M 50 300 Q 80 200 120 50"
+          fill="none"
+          stroke="var(--gold)"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <path
+          d="M 120 50 Q 130 60 115 70 Q 100 65 120 50"
+          fill="none"
+          stroke="var(--gold)"
+          stroke-width="1.5"
+        />
+        <path
+          d="M 90 150 Q 110 140 105 160 Q 90 165 90 150"
+          fill="none"
+          stroke="var(--gold)"
+          stroke-width="1.5"
+        />
+        <path
+          d="M 105 100 Q 120 90 125 110 Q 100 115 105 100"
+          fill="none"
+          stroke="var(--gold)"
+          stroke-width="1.5"
+        />
+        <g transform="translate(160, 260) scale(1.3)">
+          <path
+            d="M 0 0 C -20 -30 30 -40 40 -10 C 50 20 10 40 -10 20 C -30 0 -10 -20 0 0"
+            fill="#fff"
+            opacity="0.9"
+          />
+          <path
+            d="M 5 -5 C -10 -20 20 -25 25 -5 C 30 10 5 20 -5 10 C -15 0 -5 -10 5 -5"
+            fill="#f4f1ea"
+            opacity="0.9"
+          />
+          <path
+            d="M 10 0 C 0 -10 15 -15 20 0 C 25 10 5 15 0 5"
+            fill="#e8e3d5"
+            opacity="0.8"
+          />
+        </g>
+        <g transform="translate(100, 200) scale(1.2)">
+          <path
+            d="M 0 0 C -25 -20 -10 -50 15 -40 C 40 -30 50 -5 30 15 C 10 35 -20 30 -25 5 C -30 -20 -15 -10 0 0"
+            fill="#6b8ca6"
+            opacity="0.85"
+          />
+          <path
+            d="M 5 -5 C -15 -15 -5 -35 15 -25 C 35 -15 40 5 20 20 C 0 35 -15 20 -20 0 C -25 -15 -10 -10 5 -5"
+            fill="#4d6f8a"
+            opacity="0.9"
+          />
+          <circle cx="5" cy="-5" r="8" fill="#202e3b" />
+          <circle cx="5" cy="-5" r="4" fill="#3a5369" />
+          <path
+            d="M 5 -5 L -2 -15 M 5 -5 L 12 -15 M 5 -5 L 15 -2 M 5 -5 L -5 -2 M 5 -5 L 0 5 M 5 -5 L 10 5"
+            stroke="#fff"
+            stroke-width="0.5"
+            opacity="0.6"
+          />
+        </g>
+        <path
+          d="M 160 260 Q 200 320 250 300 Q 220 280 160 260"
+          fill="#4a5e66"
+          opacity="0.8"
+        />
+        <path
+          d="M 100 200 Q 40 180 20 120 Q 70 140 100 200"
+          fill="#374f5e"
+          opacity="0.8"
+        />
+        <path
+          d="M 130 120 Q 150 60 120 20 Q 100 80 130 120"
+          fill="#587487"
+          opacity="0.7"
+        />
+      </svg>
+
+      <svg
+        class="floral-bouquet bouquet-right"
+        viewBox="0 0 200 300"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M 50 250 Q 80 150 120 50"
+          fill="none"
+          stroke="var(--gold)"
+          stroke-width="1.5"
+          stroke-linecap="round"
+        />
+        <path
+          d="M 100 100 Q 120 90 125 110 Q 100 115 100 100"
+          fill="none"
+          stroke="var(--gold)"
+          stroke-width="1"
+        />
+        <g transform="translate(100, 150) scale(0.9)">
+          <path
+            d="M 0 0 C -20 -30 30 -40 40 -10 C 50 20 10 40 -10 20 C -30 0 -10 -20 0 0"
+            fill="#fff"
+            opacity="0.9"
+          />
+          <path
+            d="M 5 -5 C -10 -20 20 -25 25 -5 C 30 10 5 20 -5 10 C -15 0 -5 -10 5 -5"
+            fill="#f4f1ea"
+            opacity="0.9"
+          />
+        </g>
+        <g transform="translate(130, 200) scale(0.8)">
+          <path
+            d="M 0 0 C -25 -20 -10 -50 15 -40 C 40 -30 50 -5 30 15 C 10 35 -20 30 -25 5 C -30 -20 -15 -10 0 0"
+            fill="#6b8ca6"
+            opacity="0.85"
+          />
+          <circle cx="5" cy="-5" r="8" fill="#202e3b" />
+        </g>
+        <path
+          d="M 100 150 Q 40 130 20 80 Q 70 100 150"
+          fill="#4a5e66"
+          opacity="0.8"
+        />
+      </svg>
+
+      <div class="invited-text">You are invited!</div>
+
+      <!-- ABSOLUTELY LAYERED ENVELOPE PIECES FOR FLAWLESS PHYSICS -->
+      <div class="env-layer env-back patterned-liner"></div>
+
+      <!-- THE POCKET: Papers exist solidly inside this mask -->
+      <div class="env-layer paper-stack">
+        <!-- PAGE 3: Secondary Sponsors -->
+        <div class="paper" id="paper3">
+          <div class="floral-accent-top"></div>
+          <div class="floral-accent-bottom"></div>
+
+          <div class="paper-content-wrapper">
+            <div class="page-sub">The Wedding Entourage</div>
+            <div class="page-title">Secondary Sponsors</div>
+            <div class="divider"></div>
+
+            <div class="secondary-grid">
+              <div>
+                <div class="sec-role">Little Groom</div>
+                <div class="sec-names">Zyke Liam D. Surtin</div>
+              </div>
+              <div>
+                <div class="sec-role">Little Bride</div>
+                <div class="sec-names">Rotchel Via M. Organas</div>
+              </div>
+
+              <div>
+                <div class="sec-role">Maid of Honor</div>
+                <div class="sec-names">Lianne D. Ballesteros</div>
+              </div>
+              <div>
+                <div class="sec-role">Best Man</div>
+                <div class="sec-names">Vaness Lawrence T. Calub</div>
+              </div>
+
+              <div>
+                <div class="sec-role">Bridesmaids</div>
+                <div class="sec-names">
+                  Citadel Maeveth De Vera<br />Iya Mae De Vera<br />Shelyn Ann
+                  Surtin<br />Shine Carayo<br />Blessy Marquez<br />Rheamor
+                  Mayo<br />Gjeiana Surtin
+                </div>
+              </div>
+              <div>
+                <div class="sec-role">Groomsmen</div>
+                <div class="sec-names">
+                  Luke Ballesteros<br />Carlo Rossi Taradel<br />Tennee De
+                  Vera<br />Earl Ballesteros<br />Marc Earl Taradel<br />John
+                  Peter Surtin<br />Frenz Dian Taradel
+                </div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div style="text-align: center; width: 100%; z-index: 2">
+              <div class="sec-role">Flower Girls</div>
+              <div class="sec-names">
+                Steph Andrea Ballesteros<br />Amarah Nathania Sabute<br />
+                Haiziah Yasmin Manton<br />Mary Ella Devera<br />Zoe Manipon
+              </div>
+            </div>
+
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 5px;
+                margin-top: 15px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid rgba(123, 149, 168, 0.3);
+                text-align: center;
+                width: 100%;
+                z-index: 2;
+              "
+            >
+              <div>
+                <div class="sec-role">Bible Bearer</div>
+                <div class="sec-names">Jheyan Quiton</div>
+              </div>
+              <div>
+                <div class="sec-role">Ring Bearer</div>
+                <div class="sec-names">Erol Corpuz</div>
+              </div>
+              <div>
+                <div class="sec-role">Coin Bearer</div>
+                <div class="sec-names">Lucio De Vera</div>
+              </div>
+            </div>
+
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 5px;
+                text-align: center;
+                margin-top: 15px;
+                width: 100%;
+                z-index: 2;
+              "
+            >
+              <div>
+                <div class="sec-role">Candle</div>
+                <div class="sec-names">
+                  Christine Joy<br />Nuñez<br />Arnel Nuñez
+                </div>
+              </div>
+              <div>
+                <div class="sec-role">Viel</div>
+                <div class="sec-names">
+                  Apolinario Mayo<br />Jr.<br />Hercila Mayo
+                </div>
+              </div>
+              <div>
+                <div class="sec-role">Cord</div>
+                <div class="sec-names">
+                  Joemel Singkal<br />Rezel Joy Singkala
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAGE 2: Principal Sponsors -->
+        <div class="paper" id="paper2">
+          <div class="floral-accent-top"></div>
+          <div class="floral-accent-bottom"></div>
+
+          <div class="paper-content-wrapper">
+            <div class="parents-container">
+              <div>
+                <h4>Parents of the Groom</h4>
+                <strong>Jelbert Ballesteros Surtin Sr.</strong><br />
+                <span style="font-style: italic; color: var(--dusty-blue-dark)"
+                  >Gemma Calica Taradel-Surtin</span
+                >
+              </div>
+              <div>
+                <h4>Parents of the Bride</h4>
+                <strong>Randy Romero Mayo</strong><br />
+                <span style="font-style: italic; color: var(--dusty-blue-dark)"
+                  >Benilda Balala DeVera-Mayo</span
+                >
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="page-sub">Witnesses of Love</div>
+            <div class="page-title" style="margin-bottom: 15px">
+              Principal Sponsors
+            </div>
+
+            <div class="principal-grid">
+              <div>
+                <h4>Gentlemen</h4>
+                Hon. Ferry Sugal<br />Hon. Arnel Ocampo<br />Mr. Lauro Domondon
+                Jr.<br />Mr. Allan Toylo<br />Mr. Judy Carlos<br />Mr. Allan
+                Gaspar<br />Mr. Gilbert Nunez<br />Mr. Noli Balala<br />Mr. Tiso
+                Marquez
+              </div>
+              <div>
+                <h4>Ladies</h4>
+                Mrs. Marites Salaria<br />Mrs. Nick Cosio<br />Ms. Virgie
+                Novencido<br />Ms. Viva Taradel<br />Mrs. Marivic Caniedo<br />Mrs.
+                Janice Estabillo<br />Mr. Joel Villanueva<br />Mr. Ernesto
+                Domondon Jr.<br />Mrs. Marilyn Mostoles
+              </div>
+            </div>
+
+            <div style="width: 100%; margin-top: 15px; z-index: 2">
+              <h4
+                style="
+                  color: var(--gold);
+                  font-family: &quot;Montserrat&quot;, sans-serif;
+                  font-size: 0.6rem;
+                  text-transform: uppercase;
+                  letter-spacing: 2px;
+                  margin-bottom: 5px;
+                "
+              >
+                Sponsor Couples
+              </h4>
+              <div
+                style="
+                  display: flex;
+                  flex-wrap: wrap;
+                  justify-content: center;
+                  gap: 5px 15px;
+                  font-size: 0.95rem;
+                  font-family: &quot;Cormorant Garamond&quot;, serif;
+                "
+              >
+                <span>Mr. & Mrs. Ireynl Hablero</span>
+                <span>Mr. & Mrs. Johnny Appala</span>
+                <span>Mr. & Mrs. Orly Magno</span>
+                <span>Mr. & Mrs. Robert Organas</span>
+                <span>Mr. & Mrs. Jonathan Organas</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAGE 1: Main Info -->
+        <div class="paper" id="paper1">
+          <div class="floral-accent-top"></div>
+          <div class="floral-accent-bottom"></div>
+
+          <div class="paper-content-wrapper">
+            <div class="monogram-rings">
+              <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M 30 70 Q 15 35 50 15"
+                  fill="none"
+                  stroke="#7b95a8"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M 35 60 Q 25 50 30 40"
+                  fill="none"
+                  stroke="#7b95a8"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M 40 30 Q 35 20 45 15"
+                  fill="none"
+                  stroke="#7b95a8"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M 130 70 Q 145 35 110 15"
+                  fill="none"
+                  stroke="#7b95a8"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M 125 60 Q 135 50 130 40"
+                  fill="none"
+                  stroke="#7b95a8"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M 120 30 Q 125 20 115 15"
+                  fill="none"
+                  stroke="#7b95a8"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+                <circle
+                  cx="65"
+                  cy="60"
+                  r="32"
+                  fill="none"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                />
+                <circle
+                  cx="95"
+                  cy="60"
+                  r="32"
+                  fill="none"
+                  stroke="var(--gold)"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="65"
+                  y="70"
+                  font-family="'Cormorant Garamond', serif"
+                  font-size="28"
+                  font-weight="600"
+                  fill="var(--gold)"
+                  text-anchor="middle"
+                >
+                  J
+                </text>
+                <text
+                  x="95"
+                  y="70"
+                  font-family="'Cormorant Garamond', serif"
+                  font-size="28"
+                  font-weight="600"
+                  fill="var(--gold)"
+                  text-anchor="middle"
+                >
+                  M
+                </text>
+              </svg>
+            </div>
+
+            <div class="paper-subtitle">together with their families</div>
+            <div class="name-text">Jelbert Surtin</div>
+            <div class="script-and">and</div>
+            <div class="name-text">Missy DeVera</div>
+
+            <div class="info-text">
+              Invite you to join them in<br />celebrating their marriage
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="date-text">Saturday, October 24, 2026</div>
+            <div
+              style="
+                font-family: &quot;Cormorant Garamond&quot;, serif;
+                font-size: 1.25rem;
+                font-style: italic;
+                color: var(--dusty-blue-dark);
+                z-index: 2;
+              "
+            >
+              At Three o'clock in the afternoon
+            </div>
+
+            <div class="location-text">San Isidro Labrador Parish</div>
+            <div
+              style="
+                font-family: &quot;Cormorant Garamond&quot;, serif;
+                font-size: 1.05rem;
+                font-style: italic;
+                color: var(--dusty-blue-dark);
+                z-index: 2;
+              "
+            >
+              Reception immediately to follow
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- End Paper Stack -->
+
+      <div class="env-layer env-front">
+        <div class="env-string"></div>
+        <div class="scroll-to-open">SCROLL TO OPEN...</div>
+      </div>
+
+      <div class="env-layer env-flap">
+        <div class="flap-front"></div>
+        <div class="flap-back patterned-liner"></div>
+      </div>
+
+      <div class="env-layer seal"><span>J&M</span></div>
+    </div>
+
+    <!-- Animated Map Section -->
+    <div class="map-section">
+      <div class="map-title">The Destination</div>
+
+      <div class="map-container">
+        <svg
+          class="map-svg"
+          viewBox="0 0 600 400"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <rect width="100%" height="100%" fill="#fdfcf9" />
+          <path
+            d="M 0,80 Q 150,120 300,80 T 600,100 L 600,0 L 0,0 Z"
+            fill="#e8f0f6"
+          />
+          <path
+            d="M 0,350 Q 200,320 400,380 T 600,320 L 600,400 L 0,400 Z"
+            fill="#e8f0f6"
+          />
+          <path d="M 50,150 Q 100,120 150,180 T 100,250 Z" fill="#eff2e9" />
+          <path d="M 450,200 Q 500,150 550,220 T 480,280 Z" fill="#eff2e9" />
+
+          <g
+            stroke="#ffffff"
+            stroke-width="4"
+            fill="none"
+            stroke-linecap="round"
+          >
+            <path d="M 80,150 L 80,350" />
+            <path d="M 180,100 L 180,300" />
+            <path d="M 280,100 L 280,350" />
+            <path d="M 400,100 L 400,300" />
+            <path d="M 520,150 L 520,350" />
+            <path d="M 0,150 L 600,150" />
+            <path d="M 0,270 L 600,270" />
+            <path d="M 0,330 L 600,330" />
+          </g>
+
+          <path
+            d="M 120,400 L 120,240 Q 120,220 140,220 L 340,220 Q 360,220 360,200 L 360,160 Q 360,140 380,140 L 600,140"
+            stroke="#ffffff"
+            stroke-width="8"
+            fill="none"
+          />
+          <path
+            class="map-path"
+            d="M 120,280 L 120,240 Q 120,220 140,220 L 340,220 Q 360,220 360,200 L 360,160 Q 360,140 380,140 L 460,140"
+          />
+
+          <g transform="translate(120, 280)">
+            <g class="map-pin pin-ceremony">
+              <path
+                d="M0,0 C-14,-14 -22,-26 -22,-40 C-22,-54 -12,-64 0,-64 C12,-64 22,-54 22,-40 C22,-26 14,-14 0,0 Z"
+                fill="var(--gold)"
+              />
+              <g transform="translate(0, -41)">
+                <rect x="-1" y="-12" width="2" height="6" fill="#fff" />
+                <rect x="-3" y="-10" width="6" height="1.5" fill="#fff" />
+                <polygon points="-8,10 8,10 8,-2 0,-9 -8,-2" fill="#fff" />
+                <path
+                  d="M -2.5,10 L -2.5,4 A 2.5 2.5 0 0 1 2.5,4 L 2.5,10 Z"
+                  fill="var(--gold)"
+                />
+                <circle cx="0" cy="-2" r="1.5" fill="var(--gold)" />
+              </g>
+            </g>
+          </g>
+
+          <g class="map-text-group text-ceremony">
+            <text
+              x="120"
+              y="310"
+              text-anchor="middle"
+              class="map-label-title"
+              stroke="#fff"
+              stroke-width="3"
+              stroke-linejoin="round"
+            >
+              San Isidro Labrador Parish
+            </text>
+            <text x="120" y="310" text-anchor="middle" class="map-label-title">
+              San Isidro Labrador Parish
+            </text>
+            <text x="120" y="325" text-anchor="middle" class="map-label-sub">
+              Ceremony (MXP5+6GV)
+            </text>
+          </g>
+
+          <g transform="translate(460, 140)">
+            <g class="map-pin pin-reception">
+              <path
+                d="M0,0 C-14,-14 -22,-26 -22,-40 C-22,-54 -12,-64 0,-64 C12,-64 22,-54 22,-40 C22,-26 14,-14 0,0 Z"
+                fill="var(--gold)"
+              />
+              <g transform="translate(0, -38)">
+                <path
+                  d="M -11,0 L 0,-10 L 11,0"
+                  stroke="#fff"
+                  stroke-width="2.5"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <rect x="-7" y="0" width="14" height="11" fill="#fff" />
+                <rect x="-2.5" y="5" width="5" height="6" fill="var(--gold)" />
+                <circle cx="-4" cy="2" r="1" fill="var(--gold)" />
+                <circle cx="4" cy="2" r="1" fill="var(--gold)" />
+                <rect x="5" y="-9" width="2.5" height="5" fill="#fff" />
+              </g>
+            </g>
+          </g>
+
+          <g class="map-text-group text-reception">
+            <text
+              x="460"
+              y="170"
+              text-anchor="middle"
+              class="map-label-title"
+              stroke="#fff"
+              stroke-width="3"
+              stroke-linejoin="round"
+            >
+              The Bride's Residence
+            </text>
+            <text x="460" y="170" text-anchor="middle" class="map-label-title">
+              The Bride's Residence
+            </text>
+            <text x="460" y="185" text-anchor="middle" class="map-label-sub">
+              Reception To Follow
+            </text>
+          </g>
+        </svg>
+
+        <a
+          href="https://maps.app.goo.gl/9ZeLvQqPY68yYX6Q7"
+          target="_blank"
+          class="map-link-btn"
+          >Open in Google Maps</a
+        >
+      </div>
+    </div>
+
+    <script>
+      gsap.registerPlugin(ScrollTrigger);
+
+      // STEP 0: Push all papers down deeply into the pocket so they are physically hidden
+      gsap.set(".paper", { y: "100%" });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".scroll-spacer",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1.5,
+        },
+      });
+
+      // 1. Break the seal & open the envelope flap (with 2D opacity fix to prevent Safari geometry bugs)
+      tl.to(".seal", {
+        scale: 0,
+        autoAlpha: 0,
+        duration: 0.5,
+        ease: "power2.inOut",
+      })
+        .to(".invited-text", { autoAlpha: 0, y: 20, duration: 0.5 }, "<")
+        .to(
+          ".env-flap",
+          { rotateY: 180, duration: 1, ease: "power2.inOut" },
+          "<",
+        )
+        .to(".flap-front", { opacity: 0, duration: 0.01 }, "<0.5")
+        .to(".flap-back", { opacity: 1, duration: 0.01 }, "<")
+
+        // 2. Paper 1 PULLS OUT from the pocket physically. (NO FADING!)
+        // It overshoots slightly and bounces into place.
+        .to(
+          "#paper1",
+          { y: "5%", autoAlpha: 1, duration: 1.5, ease: "back.out(1.1)" },
+          "+=0.2",
+        )
+
+        // 3. Envelope layers drop away beautifully
+        .to(
+          [
+            ".env-back",
+            ".env-front",
+            ".env-flap",
+            ".seal",
+            ".floral-bouquet",
+            ".env-string",
+          ],
+          {
+            y: 1000,
+            autoAlpha: 0,
+            duration: 1.5,
+            ease: "power2.inOut",
+          },
+          "<+=0.5",
+        )
+
+        // As the envelope drops, unlock the pocket mask so the paper's drop shadow covers the whole screen
+        .set(
+          ".paper-stack",
+          { clipPath: "inset(-2000px -200px -2000px -200px)" },
+          "<",
+        )
+
+        .to("#paper1", { y: "5%", duration: 1 }) // Pause for user to read
+
+        // -------------------------
+        // THE TRUE PUSH ANIMATIONS (No Fading)
+        // -------------------------
+
+        // 4. Card 2 PUSHES Card 1 perfectly out through the top
+        .add("push1")
+        .to(
+          "#paper1",
+          { y: "-150%", duration: 1.5, ease: "power2.inOut" },
+          "push1",
+        )
+        .fromTo(
+          "#paper2",
+          { y: "100%", autoAlpha: 1 },
+          { y: "5%", duration: 1.5, ease: "power2.inOut" },
+          "push1",
+        )
+        .to("#paper2", { y: "5%", duration: 1 }) // Pause
+
+        // 5. Card 3 PUSHES Card 2 out through the top
+        .add("push2")
+        .to(
+          "#paper2",
+          { y: "-150%", duration: 1.5, ease: "power2.inOut" },
+          "push2",
+        )
+        .fromTo(
+          "#paper3",
+          { y: "100%", autoAlpha: 1 },
+          { y: "5%", duration: 1.5, ease: "power2.inOut" },
+          "push2",
+        )
+        .to("#paper3", { y: "5%", duration: 1 }) // Pause
+
+        // -------------------------
+        // MAP TRANSITION
+        // -------------------------
+        .add("pushMap")
+        .to(
+          "#paper3",
+          { y: "-150%", duration: 1.5, ease: "power2.inOut" },
+          "pushMap",
+        )
+        .to(".scene-container", { autoAlpha: 0, duration: 1.5 }, "pushMap")
+
+        .to(
+          ".map-section",
+          { autoAlpha: 1, pointerEvents: "all", duration: 1 },
+          "pushMap+=0.5",
+        )
+        .to(".map-title", {
+          autoAlpha: 1,
+          y: 0,
+          duration: 1,
+          ease: "back.out(1.5)",
+        })
+        .to(
+          ".map-container",
+          { scale: 1, autoAlpha: 1, duration: 1, ease: "power3.out" },
+          "-=0.5",
+        )
+
+        // Draw path
+        .to(".map-path", {
+          strokeDashoffset: 0,
+          duration: 2,
+          ease: "power2.inOut",
+        })
+
+        // Pop Pins
+        .to(".pin-ceremony", {
+          autoAlpha: 1,
+          scale: 1.2,
+          y: -10,
+          duration: 0.5,
+          ease: "back.out(2)",
+        })
+        .to(".pin-ceremony", { scale: 1, y: 0, duration: 0.3 })
+        .to(".text-ceremony", { autoAlpha: 1, duration: 0.5 }, "-=0.3")
+
+        .to(
+          ".pin-reception",
+          {
+            autoAlpha: 1,
+            scale: 1.2,
+            y: -10,
+            duration: 0.5,
+            ease: "back.out(2)",
+          },
+          "-=0.5",
+        )
+        .to(".pin-reception", { scale: 1, y: 0, duration: 0.3 })
+        .to(".text-reception", { autoAlpha: 1, duration: 0.5 }, "-=0.3")
+
+        // Show Map Button
+        .to(
+          ".map-link-btn",
+          { autoAlpha: 1, pointerEvents: "all", duration: 0.5, y: -10 },
+          "-=0.2",
+        );
+    </script>
+  </body>
+</html>
