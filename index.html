@@ -5,23 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jelbert & Elizabeth | Fine-Art Wedding Invitation</title>
 
-    <!-- 
-      ========================================================
-      CODE VERSION 7.6.5
-      - BUG FIX 1: Page 1 sticking out before opening. Fixed by restoring 
-        the strict y-offset and clip-path hiding mechanism.
-      - BUG FIX 2: Flap on top of Page 1. Fixed by isolating the flap into
-        its own layer (.env-flap-layer) and dynamically pushing its Z-index
-        behind the paper stack mid-animation.
-      - TIMING FIX: Peek effects precisely implemented. Card 2 peeks, 
-        then Card 3 peeks, then Map title peeks.
-      - UI FIX: Reduced the size of the "Open in Google Maps" bubble.
-      - UI FIX (7.6.4): Monogram rings pulled slightly farther apart 
-        so they intersect/connect less, keeping letters centered.
-      ========================================================
-    -->
-
-    <!-- Fine-Art Luxury Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -29,9 +12,10 @@
       rel="stylesheet"
     />
 
-    <!-- GSAP Libraries for Scroll Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
 
     <style>
       :root {
@@ -50,7 +34,8 @@
         padding: 0;
         background-color: var(--off-white);
         font-family: "Cormorant Garamond", serif;
-        overflow: hidden; /* Locked scrollbar for pure swipe/tap physics */
+        overflow: hidden;
+        touch-action: none;
         scroll-behavior: smooth;
         background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
       }
@@ -80,15 +65,15 @@
         filter: drop-shadow(0px 10px 15px rgba(0, 0, 0, 0.08));
       }
       .bouquet-left {
-        width: 350px;
-        height: 500px;
+        width: clamp(250px, 40vw, 350px);
+        height: clamp(350px, 60vh, 500px);
         top: 50%;
         left: 50%;
         transform: translate(-105%, -55%);
       }
       .bouquet-right {
-        width: 200px;
-        height: 300px;
+        width: clamp(150px, 25vw, 200px);
+        height: clamp(200px, 40vh, 300px);
         top: 50%;
         left: 50%;
         transform: translate(55%, -10%);
@@ -103,7 +88,7 @@
         left: 50%;
         width: 92vw;
         max-width: 580px;
-        height: 380px;
+        height: clamp(300px, 50vh, 380px);
         transform: translate(-50%, -50%);
         margin-top: -10px;
       }
@@ -171,7 +156,7 @@
         left: 50%;
         transform: translateX(-50%);
         font-family: "Great Vibes", cursive;
-        font-size: 3rem;
+        font-size: clamp(2.5rem, 8vw, 3rem);
         color: var(--dusty-blue-dark);
         z-index: 5;
         opacity: 0.9;
@@ -184,12 +169,13 @@
         left: 50%;
         transform: translate(-50%, -50%);
         font-family: "Montserrat", sans-serif;
-        font-size: 0.6rem;
+        font-size: clamp(0.55rem, 2vw, 0.65rem);
         letter-spacing: 4px;
         color: #fff;
         opacity: 0.9;
         text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         z-index: 5;
+        white-space: nowrap;
       }
 
       .env-flap {
@@ -217,8 +203,8 @@
         top: 62%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 75px;
-        height: 75px;
+        width: clamp(65px, 15vw, 75px);
+        height: clamp(65px, 15vw, 75px);
         margin-top: -10px;
         background: radial-gradient(
           circle at 35% 35%,
@@ -238,14 +224,14 @@
       .seal::before {
         content: "";
         position: absolute;
-        width: 62px;
-        height: 62px;
+        width: 82%;
+        height: 82%;
         border-radius: 50%;
         border: 1.5px solid rgba(255, 255, 255, 0.4);
       }
       .seal span {
         font-family: "Cormorant Garamond", serif;
-        font-size: 1.8rem;
+        font-size: clamp(1.4rem, 5vw, 1.8rem);
         font-style: italic;
         color: #fff;
         text-shadow:
@@ -262,7 +248,7 @@
         left: 50%;
         width: 92vw;
         max-width: 580px;
-        height: 380px;
+        height: clamp(300px, 50vh, 380px);
         transform: translate(-50%, -50%);
         margin-top: -10px;
         z-index: 2;
@@ -308,7 +294,8 @@
         flex-direction: column;
         align-items: center;
         justify-content: space-evenly;
-        padding: 3vh 4vw;
+        /* Tightened vertical padding to prevent overflow on small screens */
+        padding: 2vh 4vw;
         box-sizing: border-box;
         z-index: 2;
       }
@@ -361,8 +348,8 @@
 
       /* TYPOGRAPHY */
       .monogram-rings {
-        width: 130px;
-        height: 90px;
+        width: clamp(100px, 25vw, 130px);
+        height: clamp(70px, 18vw, 90px);
         margin: 0 auto;
         z-index: 2;
       }
@@ -373,14 +360,14 @@
       }
       .paper-subtitle {
         font-family: "Cormorant Garamond", serif;
-        font-size: clamp(0.9rem, 2vw, 1.1rem);
+        font-size: clamp(1rem, 3vw, 1.2rem);
         font-style: italic;
         color: var(--dusty-blue-dark);
         z-index: 2;
       }
       .name-text {
         font-family: "Cormorant Garamond", serif;
-        font-size: clamp(1.8rem, 5vw, 2.3rem);
+        font-size: clamp(2rem, 7vw, 2.5rem);
         font-weight: 500;
         color: var(--gold);
         letter-spacing: 2px;
@@ -390,7 +377,7 @@
       }
       .script-and {
         font-family: "Great Vibes", cursive;
-        font-size: clamp(1.8rem, 4vw, 2.2rem);
+        font-size: clamp(2rem, 6vw, 2.5rem);
         color: var(--gold);
         line-height: 0.5;
         z-index: 2;
@@ -398,7 +385,7 @@
       }
       .info-text {
         font-family: "Cormorant Garamond", serif;
-        font-size: clamp(0.9rem, 2vw, 1.1rem);
+        font-size: clamp(1.1rem, 3.5vw, 1.3rem);
         font-style: italic;
         color: var(--dusty-blue-dark);
         line-height: 1.4;
@@ -406,7 +393,7 @@
       }
       .date-text {
         font-family: "Montserrat", sans-serif;
-        font-size: clamp(0.65rem, 1.5vw, 0.8rem);
+        font-size: clamp(0.75rem, 2.5vw, 0.9rem);
         font-weight: 500;
         letter-spacing: 4px;
         text-transform: uppercase;
@@ -415,24 +402,27 @@
       }
       .location-text {
         font-family: "Montserrat", sans-serif;
-        font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+        font-size: clamp(0.8rem, 2.5vw, 1rem);
         font-weight: 500;
         letter-spacing: 2px;
         text-transform: uppercase;
         color: var(--dusty-blue-dark);
         z-index: 2;
       }
+
+      /* Reduced margin to save vertical space */
       .divider {
         width: 50px;
         height: 1px;
         background: var(--gold);
-        margin: 5px auto;
+        margin: 2px auto;
         opacity: 0.5;
         z-index: 2;
       }
+
       .page-title {
         font-family: "Cormorant Garamond", serif;
-        font-size: clamp(1.6rem, 4vw, 2.2rem);
+        font-size: clamp(1.6rem, 5vw, 2.4rem);
         color: var(--dusty-blue-dark);
         margin: 0;
         font-weight: 500;
@@ -441,17 +431,18 @@
       }
       .page-sub {
         font-family: "Montserrat", sans-serif;
-        font-size: clamp(0.5rem, 1vw, 0.65rem);
+        font-size: clamp(0.6rem, 2vw, 0.75rem);
         text-transform: uppercase;
         letter-spacing: 4px;
         color: var(--gold);
         margin: 0;
         z-index: 2;
       }
+
       .parents-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        gap: 8px;
         width: 100%;
         z-index: 2;
       }
@@ -459,16 +450,17 @@
         margin: 0 0 5px 0;
         color: var(--gold);
         font-family: "Montserrat", sans-serif;
-        font-size: 0.55rem;
+        font-size: clamp(0.55rem, 2vw, 0.65rem);
         text-transform: uppercase;
         letter-spacing: 2px;
       }
+
       .principal-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        gap: 8px;
         width: 100%;
-        line-height: 1.4;
+        line-height: 1.3;
         text-align: center;
         z-index: 2;
       }
@@ -476,16 +468,18 @@
         color: var(--gold);
         margin: 0 0 5px 0;
         font-family: "Montserrat", sans-serif;
-        font-size: 0.55rem;
+        font-size: clamp(0.55rem, 2vw, 0.65rem);
         text-transform: uppercase;
         letter-spacing: 2px;
         border-bottom: 1px solid rgba(194, 163, 98, 0.3);
-        padding-bottom: 5px;
+        padding-bottom: 4px;
       }
+
+      /* Tightened Secondary Grid to prevent overflow */
       .secondary-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 8px;
+        gap: 4px;
         width: 100%;
         text-align: center;
         font-family: "Cormorant Garamond", serif;
@@ -495,37 +489,52 @@
         color: var(--gold);
         font-family: "Montserrat", sans-serif;
         font-weight: 500;
-        font-size: 0.5rem;
+        font-size: clamp(0.55rem, 1.8vw, 0.65rem);
         text-transform: uppercase;
         letter-spacing: 2px;
-        margin-bottom: 2px;
-      }
-      .sec-names {
-        color: var(--dusty-blue-dark);
-        line-height: 1.2;
-        font-weight: 500;
-        font-size: clamp(0.75rem, 1.8vw, 0.9rem);
-      }
-      .parents-container strong {
-        font-size: clamp(0.85rem, 2vw, 1rem);
-      }
-      .parents-container span {
-        font-size: clamp(0.8rem, 1.8vw, 0.9rem);
-      }
-      .principal-grid div {
-        font-size: clamp(0.8rem, 1.8vw, 0.9rem);
-      }
-      .sponsor-couples span {
-        font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+        margin-bottom: 0px;
       }
 
-      @media (max-width: 600px) {
+      /* Elderly Readability Scaling - adjusted line height to fit tall card */
+      .sec-names {
+        color: var(--dusty-blue-dark);
+        line-height: 1.1;
+        font-weight: 500;
+        font-size: clamp(0.8rem, 2.2vw, 1.05rem);
+      }
+      .parents-container strong {
+        font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+        line-height: 1.1;
+      }
+      .parents-container span {
+        font-size: clamp(0.8rem, 2.2vw, 1rem);
+      }
+      .principal-grid div {
+        font-size: clamp(0.8rem, 2.2vw, 1.05rem);
+      }
+      .sponsor-couples span {
+        font-size: clamp(0.8rem, 2.2vw, 1.05rem);
+        line-height: 1.1;
+      }
+
+      /* Responsive Grid Classes replacing inline styles */
+      .trio-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
+        text-align: center;
+        width: 100%;
+        z-index: 2;
+      }
+      .border-top-grid {
+        border-top: 1px solid rgba(123, 149, 168, 0.3);
+        padding-top: 4px;
+      }
+
+      @media (max-width: 480px) {
         .paper-content-wrapper {
-          padding: 15px 8px;
-          gap: 5px;
-        }
-        .parents-container strong {
-          font-size: 0.9rem;
+          padding: 10px 8px;
+          gap: 4px;
         }
         .divider {
           display: none;
@@ -548,7 +557,7 @@
       }
       .map-title {
         font-family: "Cormorant Garamond", serif;
-        font-size: 2.8rem;
+        font-size: clamp(2.2rem, 8vw, 3rem);
         font-style: italic;
         color: var(--dusty-blue-dark);
         margin-bottom: 20px;
@@ -597,13 +606,13 @@
       }
       .map-label-title {
         font-family: "Cormorant Garamond", serif;
-        font-size: 16px;
+        font-size: clamp(14px, 4vw, 18px);
         font-weight: 600;
         fill: var(--text-dark);
       }
       .map-label-sub {
         font-family: "Montserrat", sans-serif;
-        font-size: 9px;
+        font-size: 10px;
         letter-spacing: 1px;
         text-transform: uppercase;
         fill: var(--gold);
@@ -625,8 +634,8 @@
         border-radius: 25px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         opacity: 0;
-        pointer-events: none;
-        z-index: 10;
+        pointer-events: auto; /* Allows clicking specifically here */
+        z-index: 100;
         transition:
           background-color 0.3s ease,
           transform 0.2s ease;
@@ -635,23 +644,12 @@
         background-color: var(--gold);
         transform: translateX(-50%) scale(1.05);
       }
-
-      @media (max-width: 600px) {
-        .map-title {
-          font-size: 2rem;
-          margin-bottom: 10px;
-        }
-        .map-label-title {
-          font-size: 12px;
-        }
-      }
     </style>
   </head>
   <body>
     <div class="scroll-spacer"></div>
 
     <div class="scene-container">
-      <!-- BACKGROUND FLORALS -->
       <svg
         class="floral-bouquet bouquet-left"
         viewBox="0 0 300 400"
@@ -781,14 +779,11 @@
         />
       </svg>
 
-      <!-- 1. ENVELOPE BACK LAYER -->
       <div class="envelope-wrapper env-back-layer">
         <div class="env-layer env-back patterned-liner"></div>
       </div>
 
-      <!-- 2. PAPERS LAYER (Sandwiched in middle) -->
       <div class="paper-stack">
-        <!-- PAGE 3: Secondary Sponsors -->
         <div class="paper" id="paper3">
           <div class="floral-accent-top"></div>
           <div class="floral-accent-bottom"></div>
@@ -840,16 +835,7 @@
                 Yasmin Manton<br />Mary Ella Devera<br />Zoe Manipon
               </div>
             </div>
-            <div
-              style="
-                display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: 5px;
-                text-align: center;
-                width: 100%;
-                z-index: 2;
-              "
-            >
+            <div class="trio-grid">
               <div>
                 <div class="sec-role">Bible Bearer</div>
                 <div class="sec-names">Jheyan Quiton</div>
@@ -863,18 +849,7 @@
                 <div class="sec-names">Lucio De Vera</div>
               </div>
             </div>
-            <div
-              style="
-                display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: 5px;
-                text-align: center;
-                width: 100%;
-                border-top: 1px solid rgba(123, 149, 168, 0.3);
-                padding-top: 5px;
-                z-index: 2;
-              "
-            >
+            <div class="trio-grid border-top-grid">
               <div>
                 <div class="sec-role">Candle</div>
                 <div class="sec-names">
@@ -897,7 +872,6 @@
           </div>
         </div>
 
-        <!-- PAGE 2: Principal Sponsors -->
         <div class="paper" id="paper2">
           <div class="floral-accent-top"></div>
           <div class="floral-accent-bottom"></div>
@@ -928,8 +902,8 @@
                 <h4>Gentlemen</h4>
                 Hon. Ferry Sugal<br />Hon. Arnel Ocampo<br />Mr. Lauro Domondon
                 Jr.<br />Mr. Allan Toylo<br />Mr. Judy Carlos<br />Mr. Allan
-                Gaspar<br />Mr. Gilbert Nuñez<br />Mr. Noli Balala<br />Mr. Tiso
-                Marquez
+                Gaspar<br />Mr. Gilbert Nuñez<br />Mr. Noli Balala<br />Mr.
+                Tirso Marquez
               </div>
               <div>
                 <h4>Ladies</h4>
@@ -947,7 +921,7 @@
                 style="
                   color: var(--gold);
                   font-family: &quot;Montserrat&quot;, sans-serif;
-                  font-size: 0.6rem;
+                  font-size: clamp(0.55rem, 2vw, 0.65rem);
                   text-transform: uppercase;
                   letter-spacing: 2px;
                   margin: 0 0 5px 0;
@@ -975,7 +949,6 @@
           </div>
         </div>
 
-        <!-- PAGE 1: Main Info - PERFECTLY CENTERED LOGO -->
         <div class="paper" id="paper1">
           <div class="floral-accent-top"></div>
           <div class="floral-accent-bottom"></div>
@@ -983,7 +956,6 @@
             <div style="width: 100%; text-align: center">
               <div class="monogram-rings">
                 <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
-                  <!-- Perfectly aligned letters inside circles, separated slightly -->
                   <path
                     d="M 18 70 Q 3 35 38 15"
                     fill="none"
@@ -1086,7 +1058,7 @@
               <div
                 style="
                   font-family: &quot;Cormorant Garamond&quot;, serif;
-                  font-size: 1.15rem;
+                  font-size: clamp(1rem, 3.5vw, 1.15rem);
                   font-style: italic;
                   color: var(--dusty-blue-dark);
                   z-index: 2;
@@ -1101,7 +1073,7 @@
               <div
                 style="
                   font-family: &quot;Cormorant Garamond&quot;, serif;
-                  font-size: 1.05rem;
+                  font-size: clamp(0.9rem, 3vw, 1.05rem);
                   font-style: italic;
                   color: var(--dusty-blue-dark);
                   z-index: 2;
@@ -1114,16 +1086,14 @@
         </div>
       </div>
 
-      <!-- 3. ENVELOPE FRONT LAYER (Sits on top of papers to mask them) -->
       <div class="envelope-wrapper env-front-layer">
         <div class="env-layer env-front">
           <div class="env-string"></div>
-          <div class="scroll-to-open">TAP OR SWIPE DOWN...</div>
+          <div class="scroll-to-open">TAP OR SWIPE UP TO OPEN...</div>
         </div>
         <div class="invited-text">You are invited!</div>
       </div>
 
-      <!-- 4. ENVELOPE FLAP & SEAL LAYER (Starts front, animates behind paper) -->
       <div class="envelope-wrapper env-flap-layer">
         <div class="env-layer env-flap">
           <div class="flap-front"></div>
@@ -1133,7 +1103,6 @@
       </div>
     </div>
 
-    <!-- Animated Map Section -->
     <div class="map-section">
       <div class="map-title">The Destination</div>
       <div class="map-container">
@@ -1267,7 +1236,6 @@
       </div>
     </div>
 
-    <!-- Hidden YouTube iframe container for audio playback -->
     <div
       id="youtube-audio"
       style="
@@ -1472,7 +1440,7 @@
         .to(".text-reception", { autoAlpha: 1, duration: 0.5 }, "-=0.3")
         .to(
           ".map-link-btn",
-          { autoAlpha: 1, pointerEvents: "all", duration: 0.5, y: -10 },
+          { autoAlpha: 1, pointerEvents: "auto", duration: 0.5, y: -10 },
           "-=0.2",
         );
 
@@ -1532,8 +1500,14 @@
         goToStep(currentStep - 1);
       }
 
-      window.addEventListener("click", nextStep);
+      // Accessible Tap anywhere to go to the next page
+      window.addEventListener("click", (e) => {
+        // Prevent tapping from changing the page if they are trying to click the map link!
+        if (e.target.closest(".map-link-btn")) return;
+        nextStep();
+      });
 
+      // TikTok Style Swipe Interactions
       let touchStartY = 0;
       window.addEventListener(
         "touchstart",
@@ -1548,15 +1522,20 @@
         (e) => {
           let touchEndY = e.changedTouches[0].screenY;
           let deltaY = touchEndY - touchStartY;
-          if (deltaY > 30) {
+
+          // Negative deltaY means finger dragged UP (Swipe up -> Next)
+          if (deltaY < -40) {
             nextStep();
-          } else if (deltaY < -30) {
+          }
+          // Positive deltaY means finger dragged DOWN (Swipe down -> Prev)
+          else if (deltaY > 40) {
             prevStep();
           }
         },
         { passive: true },
       );
 
+      // Mouse Wheel Interactions
       window.addEventListener(
         "wheel",
         (e) => {
@@ -1570,31 +1549,55 @@
       );
 
       // ==========================================
-      // NATIVE BACKGROUND AUDIO CONTROLLER
+      // YOUTUBE BACKGROUND AUDIO CONTROLLER
+      // (RACE CONDITION FIXED)
       // ==========================================
-      // Create the audio element in JavaScript
-      const bgMusic = new Audio("bg-music.mp3");
-      bgMusic.loop = true;
-      bgMusic.volume = 0.5; // 50% volume
-
+      let ytPlayer;
       let audioPlayed = false;
+      let userHasInteracted = false;
 
-      function startMusic() {
-        if (!audioPlayed) {
-          bgMusic
-            .play()
-            .then(() => {
-              audioPlayed = true;
-            })
-            .catch((error) => {
-              console.log("Audio play prevented by browser:", error);
-            });
-        }
+      // 1. Track global user interaction safely
+      function handleInteraction() {
+        userHasInteracted = true;
+        attemptMusicPlay();
+      }
+      window.addEventListener("click", handleInteraction);
+      window.addEventListener("touchstart", handleInteraction);
+
+      // 2. Initialize YouTube API
+      function onYouTubeIframeAPIReady() {
+        ytPlayer = new YT.Player("youtube-audio", {
+          height: "0",
+          width: "0",
+          videoId: "V4qjAyb4lNI",
+          playerVars: {
+            autoplay: 0,
+            controls: 0,
+            loop: 1,
+            playlist: "V4qjAyb4lNI",
+          },
+          events: {
+            onReady: (event) => {
+              event.target.setVolume(50);
+              // If the user already tapped BEFORE YouTube finished loading, play it immediately!
+              attemptMusicPlay();
+            },
+          },
+        });
       }
 
-      // Triggers the music the moment they tap or swipe
-      window.addEventListener("click", startMusic, { once: true });
-      window.addEventListener("touchstart", startMusic, { once: true });
+      // 3. Centralized play function ensures both user interaction AND YouTube readiness are met
+      function attemptMusicPlay() {
+        if (
+          !audioPlayed &&
+          userHasInteracted &&
+          ytPlayer &&
+          typeof ytPlayer.playVideo === "function"
+        ) {
+          ytPlayer.playVideo();
+          audioPlayed = true;
+        }
+      }
     </script>
   </body>
 </html>
