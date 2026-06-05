@@ -7,7 +7,7 @@
 
     <!-- 
       ========================================================
-      CODE VERSION 7.6.4
+      CODE VERSION 7.6.5
       - BUG FIX 1: Page 1 sticking out before opening. Fixed by restoring 
         the strict y-offset and clip-path hiding mechanism.
       - BUG FIX 2: Flap on top of Page 1. Fixed by isolating the flap into
@@ -1570,38 +1570,25 @@
       );
 
       // ==========================================
-      // YOUTUBE BACKGROUND AUDIO CONTROLLER
+      // NATIVE BACKGROUND AUDIO CONTROLLER
       // ==========================================
-      let ytPlayer;
+      // Create the audio element in JavaScript
+      const bgMusic = new Audio("bg-music.mp3");
+      bgMusic.loop = true;
+      bgMusic.volume = 0.5; // 50% volume
+
       let audioPlayed = false;
 
-      function onYouTubeIframeAPIReady() {
-        ytPlayer = new YT.Player("youtube-audio", {
-          height: "0",
-          width: "0",
-          videoId: "V4qjAyb4lNI", // Araw-Araw by Ben&Ben
-          playerVars: {
-            autoplay: 0,
-            controls: 0,
-            loop: 1,
-            playlist: "V4qjAyb4lNI", // Required for loop to work
-          },
-          events: {
-            onReady: (event) => {
-              event.target.setVolume(50); // Set volume to 50%
-            },
-          },
-        });
-      }
-
       function startMusic() {
-        if (
-          !audioPlayed &&
-          ytPlayer &&
-          typeof ytPlayer.playVideo === "function"
-        ) {
-          ytPlayer.playVideo();
-          audioPlayed = true;
+        if (!audioPlayed) {
+          bgMusic
+            .play()
+            .then(() => {
+              audioPlayed = true;
+            })
+            .catch((error) => {
+              console.log("Audio play prevented by browser:", error);
+            });
         }
       }
 
