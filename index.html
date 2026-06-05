@@ -3,19 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jelbert & Missy | Fine-Art Wedding Invitation</title>
+    <title>Jelbert & Elizabeth | Fine-Art Wedding Invitation 7.6.1</title>
 
-    <!-- 
-      ========================================================
-      CODE VERSION 7.3.0
-      - FIXED: Initial state clipping. Page 1 is now strictly 
-      masked to the exact dimensions of the closed envelope 
-      body, completely preventing any content from poking out 
-      the top before the envelope is opened.
-      ========================================================
-    -->
-
-    <!-- Fine-Art Luxury Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -23,7 +12,6 @@
       rel="stylesheet"
     />
 
-    <!-- GSAP Libraries for Scroll Animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
@@ -44,14 +32,13 @@
         padding: 0;
         background-color: var(--off-white);
         font-family: "Cormorant Garamond", serif;
-        overflow-x: hidden;
+        overflow: hidden; /* Locked scrollbar for pure swipe/tap physics */
         scroll-behavior: smooth;
         background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
       }
 
       .scroll-spacer {
-        height: 900vh;
-        width: 100vw;
+        display: none;
       }
 
       .scene-container {
@@ -91,7 +78,6 @@
 
       /* ----------------------------------
          PHYSICAL ENVELOPE LAYERS
-         Separated back and front for true 3D sandwiching of the paper
          ----------------------------------- */
       .envelope-wrapper {
         position: absolute;
@@ -104,9 +90,12 @@
         margin-top: -10px;
       }
       .env-back-layer {
-        z-index: 2;
+        z-index: 1;
       }
       .env-front-layer {
+        z-index: 3;
+      }
+      .env-flap-layer {
         z-index: 4;
       }
 
@@ -130,7 +119,6 @@
       .env-front {
         background: var(--envelope-bg);
         border-radius: 4px;
-        z-index: 3;
         clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
         box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.05);
       }
@@ -189,7 +177,6 @@
       .env-flap {
         height: 65%;
         transform-origin: top center;
-        z-index: 4;
       }
       .flap-front,
       .flap-back {
@@ -249,26 +236,37 @@
       }
 
       /* ----------------------------------
-         PAPER CARDS (Fully Responsive, No Crop, Whole Page Showing)
+         PAPER CARDS (Sandwiched and fully masked)
          ----------------------------------- */
+      .paper-stack {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 92vw;
+        max-width: 580px;
+        height: 380px;
+        transform: translate(-50%, -50%);
+        margin-top: -10px;
+        z-index: 2;
+        clip-path: inset(0px 0px 0px 0px); /* Strictly masks overflow */
+      }
+
       .paper {
         position: absolute;
         left: 50%;
-        top: 50%; /* Center anchor */
+        top: 50%;
         transform: translate(-50%, -50%);
-
         width: 92vw;
         max-width: 550px;
         height: 85vh;
-        max-height: 820px; /* Forces fit into screen bounds */
-
+        max-height: 820px;
         background: #ffffff;
         border-radius: 2px;
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
         box-sizing: border-box;
         text-align: center;
         color: var(--text-dark);
-        overflow: hidden; /* NO SCROLLING */
+        overflow: hidden;
         background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.03"/%3E%3C/svg%3E');
       }
 
@@ -343,7 +341,7 @@
         z-index: 1;
       }
 
-      /* TYPOGRAPHY FOR PAPERS - Fluid Sizing */
+      /* TYPOGRAPHY */
       .monogram-rings {
         width: 130px;
         height: 90px;
@@ -355,7 +353,6 @@
         height: 100%;
         filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.05));
       }
-
       .paper-subtitle {
         font-family: "Cormorant Garamond", serif;
         font-size: clamp(0.9rem, 2vw, 1.1rem);
@@ -407,7 +404,6 @@
         color: var(--dusty-blue-dark);
         z-index: 2;
       }
-
       .divider {
         width: 50px;
         height: 1px;
@@ -416,7 +412,6 @@
         opacity: 0.5;
         z-index: 2;
       }
-
       .page-title {
         font-family: "Cormorant Garamond", serif;
         font-size: clamp(1.6rem, 4vw, 2.2rem);
@@ -435,7 +430,6 @@
         margin: 0;
         z-index: 2;
       }
-
       .parents-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -451,7 +445,6 @@
         text-transform: uppercase;
         letter-spacing: 2px;
       }
-
       .principal-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -471,7 +464,6 @@
         border-bottom: 1px solid rgba(194, 163, 98, 0.3);
         padding-bottom: 5px;
       }
-
       .secondary-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -507,6 +499,19 @@
       }
       .sponsor-couples span {
         font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+      }
+
+      @media (max-width: 600px) {
+        .paper-content-wrapper {
+          padding: 15px 8px;
+          gap: 5px;
+        }
+        .parents-container strong {
+          font-size: 0.9rem;
+        }
+        .divider {
+          display: none;
+        }
       }
 
       /* MAP SECTION */
@@ -588,18 +593,18 @@
 
       .map-link-btn {
         position: absolute;
-        bottom: 25px;
+        bottom: 20px;
         left: 50%;
         transform: translateX(-50%);
         background-color: var(--dusty-blue-dark);
         color: #ffffff;
         text-decoration: none;
         font-family: "Montserrat", sans-serif;
-        font-size: 0.75rem;
-        letter-spacing: 2px;
+        font-size: 0.6rem;
+        letter-spacing: 1.5px;
         text-transform: uppercase;
-        padding: 14px 28px;
-        border-radius: 30px;
+        padding: 10px 20px;
+        border-radius: 25px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         opacity: 0;
         pointer-events: none;
@@ -628,7 +633,6 @@
     <div class="scroll-spacer"></div>
 
     <div class="scene-container">
-      <!-- BACKGROUND FLORALS -->
       <svg
         class="floral-bouquet bouquet-left"
         viewBox="0 0 300 400"
@@ -758,14 +762,10 @@
         />
       </svg>
 
-      <!-- 1. ENVELOPE BACK LAYER -->
       <div class="envelope-wrapper env-back-layer">
         <div class="env-layer env-back patterned-liner"></div>
       </div>
 
-      <!-- 2. PAPERS LAYER (Sandwiched in middle) -->
-
-      <!-- PAGE 3: Secondary Sponsors -->
       <div class="paper-stack">
         <div class="paper" id="paper3">
           <div class="floral-accent-top"></div>
@@ -875,7 +875,6 @@
           </div>
         </div>
 
-        <!-- PAGE 2: Principal Sponsors -->
         <div class="paper" id="paper2">
           <div class="floral-accent-top"></div>
           <div class="floral-accent-bottom"></div>
@@ -952,16 +951,13 @@
           </div>
         </div>
 
-        <!-- PAGE 1: Main Info - PERFECTLY CENTERED LOGO -->
         <div class="paper" id="paper1">
           <div class="floral-accent-top"></div>
           <div class="floral-accent-bottom"></div>
           <div class="paper-content-wrapper">
-            <!-- Center Logo and balance title -->
             <div style="width: 100%; text-align: center">
               <div class="monogram-rings">
                 <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
-                  <!-- Perfectly aligned letters inside circles -->
                   <path
                     d="M 30 70 Q 15 35 50 15"
                     fill="none"
@@ -1040,7 +1036,7 @@
                     fill="var(--gold)"
                     text-anchor="middle"
                   >
-                    M
+                    E
                   </text>
                 </svg>
               </div>
@@ -1048,9 +1044,9 @@
             </div>
 
             <div style="width: 100%">
-              <div class="name-text">Jelbert Surtin</div>
+              <div class="name-text">Jelbert Surtin Jr.</div>
               <div class="script-and">and</div>
-              <div class="name-text">Missy DeVera</div>
+              <div class="name-text">Elizabeth De Vera</div>
             </div>
 
             <div class="info-text">
@@ -1060,7 +1056,7 @@
             <div class="divider"></div>
 
             <div style="width: 100%">
-              <div class="date-text">Saturday, October 24, 2026</div>
+              <div class="date-text">Saturday, June 24, 2026</div>
               <div
                 style="
                   font-family: &quot;Cormorant Garamond&quot;, serif;
@@ -1070,7 +1066,7 @@
                   z-index: 2;
                 "
               >
-                At Three o'clock in the afternoon
+                At Eight o'clock in the morning
               </div>
             </div>
 
@@ -1085,29 +1081,30 @@
                   z-index: 2;
                 "
               >
-                Reception immediately to follow
+                Reception will follow at bride's residence
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 3. ENVELOPE FRONT LAYER (Sits on top of papers to mask them) -->
       <div class="envelope-wrapper env-front-layer">
         <div class="env-layer env-front">
           <div class="env-string"></div>
           <div class="scroll-to-open">TAP OR SWIPE DOWN...</div>
         </div>
+        <div class="invited-text">You are invited!</div>
+      </div>
+
+      <div class="envelope-wrapper env-flap-layer">
         <div class="env-layer env-flap">
           <div class="flap-front"></div>
           <div class="flap-back patterned-liner"></div>
         </div>
-        <div class="seal"><span>J&M</span></div>
-        <div class="invited-text">You are invited!</div>
+        <div class="seal"><span>J&E</span></div>
       </div>
     </div>
 
-    <!-- Animated Map Section -->
     <div class="map-section">
       <div class="map-title">The Destination</div>
       <div class="map-container">
@@ -1245,17 +1242,13 @@
       gsap.registerPlugin(ScrollTrigger);
 
       // INITIAL STATES
-      // Paper 1 starts pushed down slightly to align its top inside the envelope
-      gsap.set("#paper1", { y: "25vh" });
-
-      // MASK the paper stack EXACTLY to the envelope bounds so nothing pokes out top or bottom
-      // Envelope is 380px high, absolute centered.
-      // So the top bound is 50vh - 190px. Bottom bound is 50vh - 190px from bottom.
+      // Paper 1 starts pushed down exactly to the envelope cut line
+      gsap.set("#paper1", { y: "40vh", clipPath: "inset(20% 0 45% 0)" });
+      // Paper stack is masked exactly to the envelope dimensions so it NEVER pokes out top or bottom
       gsap.set(".paper-stack", {
-        clipPath: "inset(calc(50vh - 190px) -100vw calc(50vh - 190px) -100vw)",
+        clipPath: "inset(-100vh -100vw calc(50vh - 185px) -100vw)",
       });
-
-      // Pages 2 and 3 are completely hidden below the screen viewport
+      // Pages 2 and 3 are hidden far below
       gsap.set("#paper2, #paper3", { top: "150%" });
 
       const tl = gsap.timeline({ paused: true });
@@ -1277,42 +1270,59 @@
         .to(".flap-front", { autoAlpha: 0, duration: 0.01 }, "step0+=0.4")
         .to(".flap-back", { autoAlpha: 1, duration: 0.01 }, "step0+=0.4")
 
-        // Flap drops perfectly BEHIND the paper layer now that it's open
-        .set(".env-flap", { zIndex: 1 }, "step0+=0.4")
+        // Push the FLAP LAYER exactly behind the paper stack once opened!
+        .set(".env-flap-layer", { zIndex: 1 }, "step0+=0.4")
 
-        // Release the TOP mask from the paper stack so the paper can physically slide UP out of the envelope
+        // Unmask top of stack so paper can visually slide out
         .set(
           ".paper-stack",
           { clipPath: "inset(-100vh -100vw calc(50vh - 190px) -100vw)" },
           "step0+=0.8",
         )
 
-        // Paper 1 physically POPS UP from inside the envelope pocket
+        // Pop out paper 1 smoothly
         .to(
           "#paper1",
-          { y: "-10vh", duration: 1.2, ease: "power2.out" },
-          "step0+=0.8",
+          {
+            y: "-5vh",
+            clipPath: "inset(0% 0 0% 0)",
+            duration: 1.2,
+            ease: "power2.out",
+          },
+          "step0+=0.6",
         )
 
-        // Envelope wrappers drop away completely SOLID
+        // Drop all envelope parts (front, back, flap) completely off screen
         .to(
-          [".env-back-layer", ".env-front-layer", ".floral-bouquet"],
+          [
+            ".env-back-layer",
+            ".env-front-layer",
+            ".env-flap-layer",
+            ".floral-bouquet",
+          ],
           { y: "150vh", duration: 1.2, ease: "power2.in" },
-          "step0+=1.6",
+          "step0+=1.4",
         )
 
-        // Unmask the paper stack fully so shadows appear normally
+        // Fully unmask stack for full shadows
         .set(
           ".paper-stack",
           { clipPath: "inset(-100vh -100vw -100vh -100vw)" },
-          "step0+=1.6",
+          "step0+=1.4",
         )
 
-        // Drop Paper 1 into exact center vertically with a subtle bounce
+        // Center paper 1
         .to(
           "#paper1",
           { y: "0vh", top: "50%", duration: 0.6, ease: "back.out(1.2)" },
-          "step0+=2.4",
+          "step0+=2.2",
+        )
+
+        // TIMING FIX: Bring tip of paper 2 into bottom view (Peeking!)
+        .to(
+          "#paper2",
+          { top: "135%", duration: 1.2, ease: "power2.inOut" },
+          "step0+=1.4",
         );
 
       tl.addLabel("step1", "+=0.1");
@@ -1324,11 +1334,18 @@
         "#paper1",
         { top: "-150%", duration: 1.2, ease: "power2.inOut" },
         "step1",
-      ).to(
-        "#paper2",
-        { top: "50%", duration: 1.2, ease: "power2.inOut" },
-        "step1",
-      );
+      )
+        .to(
+          "#paper2",
+          { top: "50%", duration: 1.2, ease: "power2.inOut" },
+          "step1",
+        )
+        // TIMING FIX: Peek Card 3
+        .to(
+          "#paper3",
+          { top: "135%", duration: 1.2, ease: "power2.inOut" },
+          "step1",
+        );
 
       tl.addLabel("step2", "+=0.1");
 
@@ -1339,11 +1356,18 @@
         "#paper2",
         { top: "-150%", duration: 1.2, ease: "power2.inOut" },
         "step2",
-      ).to(
-        "#paper3",
-        { top: "50%", duration: 1.2, ease: "power2.inOut" },
-        "step2",
-      );
+      )
+        .to(
+          "#paper3",
+          { top: "50%", duration: 1.2, ease: "power2.inOut" },
+          "step2",
+        )
+        // TIMING FIX: Peek Map Title
+        .to(
+          ".map-section",
+          { top: "90%", autoAlpha: 1, duration: 1.2, ease: "power2.inOut" },
+          "step2",
+        );
 
       tl.addLabel("step3", "+=0.1");
 
@@ -1419,7 +1443,6 @@
       let isAnimating = false;
 
       function goToStep(targetStep) {
-        // Prevent out-of-bounds or overlapping animations
         if (
           isAnimating ||
           targetStep === currentStep ||
@@ -1431,19 +1454,16 @@
 
         let targetLabel = "step" + targetStep;
 
-        // If moving TO the map step, play the map sequence after arrival
         if (targetStep === 4 && currentStep === 3) {
           tl.tweenTo(targetLabel, {
             ease: "power1.inOut",
             onComplete: () => {
-              mapAnim.play(0); // Trigger automatic map draw
+              mapAnim.play(0);
               currentStep = targetStep;
               isAnimating = false;
             },
           });
-        }
-        // If moving BACK FROM the map step, reverse the map first before shifting cards
-        else if (currentStep === 4 && targetStep === 3) {
+        } else if (currentStep === 4 && targetStep === 3) {
           mapAnim.reverse().then(() => {
             tl.tweenTo(targetLabel, {
               ease: "power1.inOut",
@@ -1453,9 +1473,7 @@
               },
             });
           });
-        }
-        // Normal card-to-card shifting
-        else {
+        } else {
           tl.tweenTo(targetLabel, {
             ease: "power1.inOut",
             onComplete: () => {
@@ -1473,10 +1491,8 @@
         goToStep(currentStep - 1);
       }
 
-      // 1. Click / Tap Event
       window.addEventListener("click", nextStep);
 
-      // 2. Touch / Swipe Event
       let touchStartY = 0;
       window.addEventListener(
         "touchstart",
@@ -1491,25 +1507,22 @@
         (e) => {
           let touchEndY = e.changedTouches[0].screenY;
           let deltaY = touchEndY - touchStartY;
-
-          // Threshold prevents accidental taps triggering a swipe
           if (deltaY > 30) {
-            nextStep(); // Swipe Down -> Next
+            nextStep();
           } else if (deltaY < -30) {
-            prevStep(); // Swipe Up -> Prev
+            prevStep();
           }
         },
         { passive: true },
       );
 
-      // 3. Mouse Wheel Event Support
       window.addEventListener(
         "wheel",
         (e) => {
           if (e.deltaY > 0) {
-            nextStep(); // Scroll Down -> Next
+            nextStep();
           } else if (e.deltaY < 0) {
-            prevStep(); // Scroll Up -> Prev
+            prevStep();
           }
         },
         { passive: true },
